@@ -1,7 +1,9 @@
-from django.http import HttpResponse
 import requests
-
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 import logging
+
 logger = logging.getLogger(__name__)
 
 def index(request):
@@ -15,6 +17,10 @@ def index(request):
 
     return HttpResponse(string)
 
+
+
+@csrf_exempt
+@require_POST
 def sended(request,sended):
     string = "Hello, I am a bot response." + str(request) + sended;
 
@@ -32,6 +38,8 @@ def sended(request,sended):
     richiesta = requests.get(URL, verify=False, data={'chat_id': request, 'text': string})
 
     return HttpResponse(string)
+
+
 
 
 
