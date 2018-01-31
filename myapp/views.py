@@ -15,7 +15,7 @@ def index(request):
 
     return HttpResponse(string)
 
-def index(request,sended):
+def sended(request,sended):
     string = "Hello, I am a bot response." + str(request);
 
     # imposto l'URL per inviare i messaggi indietro al bot
