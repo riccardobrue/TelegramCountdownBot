@@ -15,6 +15,17 @@ def index(request):
 
     return HttpResponse(string)
 
+def index(request,sended):
+    string = "Hello, I am a bot response." + str(request);
+
+    # imposto l'URL per inviare i messaggi indietro al bot
+    URL = 'https://api.telegram.org/bot543129108:AAE13LpVqITEfI-DmzGkQP1rRPvq6fzuLQc/sendMessage'
+
+    # invio indietro alla chat ID il messaggio ricevuto
+    richiesta = requests.get(URL, verify=False, data={'chat_id': request, 'text': string})
+
+    return HttpResponse(string)
+
 
 def bot_response(request, bot_response_id):
     response_id=str(bot_response_id);

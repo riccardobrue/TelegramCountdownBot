@@ -7,6 +7,7 @@ urlpatterns = [
     # ex: /myapp/
     path('', views.index, name='index'),
     path('/', views.index, name='index'),
+    path('<string:sended>/', views.sended, name='sended'),
 
     # ex: /myapp/5/
     path('<int:bot_response_id>/', views.bot_response, name='bot_response'),
