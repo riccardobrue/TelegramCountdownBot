@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '=5xqooje3k6*ozbqytmh(7e-znt_13f3!!a@1d3#9h$f8f36*$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["telegramcountdownricbot-telegramcountdownricbot.7e14.starter-us-west-2.openshiftapps.com"]
 
 
 # Application definition
