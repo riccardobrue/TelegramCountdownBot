@@ -1,29 +1,28 @@
 # THIS IS THE ENTRY POINT FOR OPENSHIFT
+from flask import Flask, jsonify
+from datetime import datetime
+import os
+import requests
+import random
 
-from http.server import HTTPServer
-from http.server import BaseHTTPRequestHandler
-from http import HTTPStatus
+user = os.environ["MYSQL_USER"]
+passwd = os.environ["MYSQL_PASSWORD"]
+dbhost = os.environ["MYSQL_SERVICE_HOST"]
+dbname = os.environ["MYSQL_DATABASE"]
 
-class MyHandler(BaseHTTPRequestHandler):
+application = Flask(__name__)
+application.config['SQLALCHEMY_DATABASE_URI'] = \
+    'mysql://%s:%s@%s/%s' % (user, passwd, dbhost, dbname)
 
-    def do_GET(self):
-        self.send_response(HTTPStatus.OK)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        self.wfile.write(b'Hello, Python!')
-        return
-
-
-def run(server_class=HTTPServer, handler_class=MyHandler):
-    server_address = ('telegramcountdownricbot-telegramcountdownricbot.7e14.starter-us-west-2.openshiftapps.com', 8080)
-    httpd = server_class(server_address, handler_class)
-    try:
-        print("Server works on http://localhost:8000")
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("Stop the server on http://localhost:8000")
-        httpd.socket.close()
+application.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-if __name__ == '__main__':
-    run()
+@application.route("/buttonpress")
+def press():
+    #r = requests.post(urlrow.url, json=details)
+    return jsonify({"ButtonPress": "Success"})
+
+
+if __name__ == "__main__":
+    application.run(debug=True)
