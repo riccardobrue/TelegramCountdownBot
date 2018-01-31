@@ -25,7 +25,10 @@ SECRET_KEY = '=5xqooje3k6*ozbqytmh(7e-znt_13f3!!a@1d3#9h$f8f36*$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["telegramcountdownricbot-telegramcountdownricbot.7e14.starter-us-west-2.openshiftapps.com"]
+ALLOWED_HOSTS = [
+    "telegramcountdownricbot-telegramcountdownricbot.7e14.starter-us-west-2.openshiftapps.com",
+    "telegrambot-telegramcountdownricbot.7e14.starter-us-west-2.openshiftapps.com",
+    "127.0.0.1"]
 
 
 # Application definition
