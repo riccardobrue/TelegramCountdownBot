@@ -5,13 +5,17 @@ import os
 import requests
 import random
 
-application = Flask(__name__)
+app = Flask(__name__)
 
-@application.route("/buttonpress")
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
+
+@app.route("/b")
 def press():
     #r = requests.post(urlrow.url, json=details)
     return jsonify({"ButtonPress": "Success"})
 
 
 if __name__ == "__main__":
-    application.run(debug=True)
+    app.run()
