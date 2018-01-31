@@ -12,7 +12,7 @@ urlpatterns = [
     # ex: /myapp/5/results/
     path('<int:bot_response_id>/get/', views.bot_response, name='bot_response_get'),
 
-    path('', include('django_telegrambot.urls')),
+    path('', include('myapp.urls')),
 
 
 ]
