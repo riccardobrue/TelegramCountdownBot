@@ -31,5 +31,5 @@ def run():
     print('running server...')
     httpd.serve_forever()
 
-
-run()
+if __name__ == '__main__':
+    run()
