@@ -5,7 +5,6 @@ __date__ = "$10-01-2018 17:14$"
 import os
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
 
 # end of imports
 ######################################
@@ -67,10 +66,3 @@ print(short_descs)
 print(temps)
 print(descs)
 
-
-weather = pd.DataFrame({
-        "period": periods,
-        "short_desc": short_descs,
-        "temp": temps,
-        "desc":descs
-    })
