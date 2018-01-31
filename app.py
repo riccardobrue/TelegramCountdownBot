@@ -1,9 +1,4 @@
-#
 # THIS IS THE ENTRY POINT FOR OPENSHIFT
-#
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 from http.server import HTTPServer
 from http.server import BaseHTTPRequestHandler
@@ -20,7 +15,7 @@ class MyHandler(BaseHTTPRequestHandler):
 
 
 def run(server_class=HTTPServer, handler_class=MyHandler):
-    server_address = ('localhost', 8000)
+    server_address = ('telegramcountdownricbot-telegramcountdownricbot.7e14.starter-us-west-2.openshiftapps.com', 8080)
     httpd = server_class(server_address, handler_class)
     try:
         print("Server works on http://localhost:8000")
