@@ -20,4 +20,4 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 
 updater.start_polling()
-#updater.idle()
+updater.idle()
