@@ -6,7 +6,7 @@ def hello(bot, update):
 
 
 def start(bot, update):
-     bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+update.message.chat_id)
+     bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+str(update.message.chat_id))
 
 
 updater = Updater('543129108:AAE13LpVqITEfI-DmzGkQP1rRPvq6fzuLQc')
