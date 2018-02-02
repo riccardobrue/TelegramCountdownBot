@@ -14,7 +14,7 @@ def initdb():
     return db.countdowns #get the collection
 
 def add():
-    collections=start()
+    collections=initdb()
     #Add a document in the collection
     countdown = {"author": "Mike",
             "text": "My first blog post!",
@@ -24,6 +24,6 @@ def add():
     collection_id = collections.insert_one(countdown).inserted_id
 
 def get():
-    collections=start()
+    collections=initdb()
     pprint.pprint(collections.find_one({"author": "Mike"}))
     return str(collections.find_one({"author": "Mike"}))
