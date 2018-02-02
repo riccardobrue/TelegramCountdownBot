@@ -1,5 +1,6 @@
 from telegram.ext import Updater, CommandHandler
 import logging
+import db_manager
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -12,7 +13,10 @@ def hello(bot, update):
 
 
 def start(bot, update):
-    string=""
+    db_manager.add()
+    savedMessage=db_manager.get()
+
+    string=""+savedMessage+"_:_"
     string+="Chat ID: "+str(update.message.chat_id)+"_"
     string+="Name: "+str(update.message.from_user.first_name)+"_"
     bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+str(update.message.chat_id))
