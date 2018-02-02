@@ -5,8 +5,12 @@ import pprint
 def start():
     client = MongoClient('mongodb://mongodb:mongodbpassword@mongodb/db')
     db = client.db
+    try:
+        db.create_collection("countdowns")  # create a new collection called "countdowns"
+    except:
+        pass
 
-    db.create_collection("countdowns") #create a new collection called "countdowns"
+
     return db.countdowns #get the collection
 
 def add():
