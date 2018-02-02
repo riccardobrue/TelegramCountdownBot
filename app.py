@@ -1,7 +1,6 @@
 from telegram.ext import Updater, CommandHandler
 import logging
 import db_manager
-
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -17,6 +16,9 @@ def start(bot, update):
     savedMessage=db_manager.get()
 
     string=""+savedMessage+"_:_"
+    string+="Chat ID: "+str(update.message.chat_id)+"_"
+
+    string=""
     string+="Chat ID: "+str(update.message.chat_id)+"_"
     string+="Name: "+str(update.message.from_user.first_name)+"_"
     bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+str(update.message.chat_id)+string)
@@ -50,11 +52,9 @@ def unset(bot, update, chat_data):
     if 'job' not in chat_data:
         update.message.reply_text('You have no active timer')
         return
-
     job = chat_data['job']
     job.schedule_removal()
     del chat_data['job']
-
     update.message.reply_text('Timer successfully unset!')
 
 

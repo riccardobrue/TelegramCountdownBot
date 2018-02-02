@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import datetime
 import pprint
 
-def start():
+def initdb():
     client = MongoClient('mongodb://mongodb:mongodbpassword@mongodb/db')
     db = client.db
     try:
