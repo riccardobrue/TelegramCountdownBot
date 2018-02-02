@@ -19,7 +19,7 @@ def start(bot, update):
     string=""+savedMessage+"_:_"
     string+="Chat ID: "+str(update.message.chat_id)+"_"
     string+="Name: "+str(update.message.from_user.first_name)+"_"
-    bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+str(update.message.chat_id))
+    bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+str(update.message.chat_id)+string)
 
 def alarm(bot, job):
     """Send the alarm message."""
