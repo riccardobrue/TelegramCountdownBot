@@ -15,13 +15,10 @@ def start(bot, update):
     db_manager.add()
     savedMessage=db_manager.get()
 
-    string=""+savedMessage+"_:_"
-    string+="Chat ID: "+str(update.message.chat_id)+"_"
-
-    string=""
-    string+="Chat ID: "+str(update.message.chat_id)+"_"
-    string+="Name: "+str(update.message.from_user.first_name)+"_"
-    bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+str(update.message.chat_id)+string)
+    string="_FromDB: "+savedMessage+"_"
+    string+="_ChatID: "+str(update.message.chat_id)+"_"
+    string+="_Name: "+str(update.message.from_user.first_name)
+    bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+string)
 
 def alarm(bot, job):
     """Send the alarm message."""
