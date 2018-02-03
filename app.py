@@ -91,7 +91,7 @@ def set_timer_message(bot, update,user_data):
 
     db_manager.add(chat_id,user.first_name,update.message.text,user_data['data'],0)
     savedCountdown=db_manager.getSingle(chat_id,user.first_name,0)
-    update.message.reply_text('Message acquired and countdown set. Bye! ('+savedCountdown+")")
+    update.message.reply_text('Message acquired and countdown set. Bye! (' + savedCountdown +"_"+insertionMessage +")")
 
     clear(user_data)
     return ConversationHandler.END
