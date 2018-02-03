@@ -16,6 +16,7 @@ def initdb():
 def add(chatId, chatName, message, date, counter):
     collection=initdb()
     record = collection.find_one({'chartid': chatId, 'chatName': chatName, 'counter': counter})
+
     if (record == None):
         targetDate = datetime.datetime.strptime(date, '%d/%m/%Y')
         today = datetime.datetime.utcnow()
@@ -37,7 +38,7 @@ def add(chatId, chatName, message, date, counter):
 
             insertedId=collection.insert_one(countdown).inserted_id
             #SET THE NEXT COUNTDOWN
-            return "Date saved for the countdown!"
+            return "Date saved for the countdown! [code: "+counter+"]"
         else:
             return "Cannot countdown to the past!"
 
