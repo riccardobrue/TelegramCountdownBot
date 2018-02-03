@@ -17,15 +17,6 @@ def hello(bot, update):
     update.message.reply_text('Hello {}'.format(update.message.from_user.first_name))
 
 
-def startnorm(bot, update):
-    db_manager.add()
-    savedMessage=db_manager.get()
-
-    string="_FromDB: "+savedMessage+"_"
-    string+="_ChatID: "+str(update.message.chat_id)+"_"
-    string+="_Name: "+str(update.message.from_user.first_name)
-    bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!"+string)
-
 def alarm(bot, job):
     """Send the alarm message."""
     bot.send_message(job.context, text='Beep!')
@@ -96,28 +87,23 @@ def set_timer_date(bot, update,user_data):
 
 #==========================------------------------------------
 def set_timer_message(bot, update,user_data):
-    user = update.message.from_user
-    chat_id = update.message.chat_id
-    logger.info("Message from %s: %s", user.first_name, update.message.text)
-
-    insertionMessage=db_manager.add(chat_id,user.first_name,update.message.text,user_data['data'],0)
-    savedCountdown=db_manager.getSingle(chat_id,user.first_name,0)
-    update.message.reply_text('Message acquired and countdown set. Bye! (' + savedCountdown +"_"+insertionMessage +")")
-
+    set_countdown(update, update.message, user_data['data'])
     clear(user_data)
     return ConversationHandler.END
 #==========================------------------------------------
 def skip_timer_message(bot, update, user_data):
-    user = update.message.from_user
-    chat_id = update.message.chat_id
-    logger.info("User %s did not send any message.", user.first_name)
-
-    insertionMessage=db_manager.add(chat_id, user.first_name,None, user_data['data'], 0)
-    savedCountdown = db_manager.getSingle(chat_id, user.first_name, 0)
-    update.message.reply_text('Countdown set. Bye! (' + savedCountdown +"_"+insertionMessage +")")
-
+    set_countdown(update, None, user_data['data'])
     clear(user_data)
     return ConversationHandler.END
+
+#==========================------------------------------------
+def set_countdown(update, message, data):
+    insertionMessage = db_manager.add(update.message.chat_id, update.message.from_user.first_name, message, data, 0)
+    savedCountdown = db_manager.getSingle(update.message.chat_id, update.message.from_user.first_name, 0)
+
+    update.message.reply_text("Countdown set. Bye!")
+
+
 #==========================------------------------------------
 def dismiss(bot, update, user_data):
     user = update.message.from_user
@@ -136,7 +122,7 @@ def show_countdowns(bot, update):
     savedCountdown=db_manager.getAll(chat_id,user.first_name)
     message=""
     for doc in savedCountdown:
-        message+=str(doc)+" : _ : "
+        message+=str(doc["date"])+"_"+doc["message"]+"\n"
 
     update.message.reply_text('LIST:('+ message +')')
 
@@ -167,7 +153,6 @@ def openshiftStart():
     dispatcher.add_handler(conv_handler)
     # ==============================================================================================
 
-    dispatcher.add_handler(CommandHandler('startnorm', startnorm))
     dispatcher.add_handler(CommandHandler('hello', hello))
     dispatcher.add_handler(CommandHandler('show', show_countdowns))
 
