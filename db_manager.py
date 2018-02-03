@@ -84,3 +84,14 @@ def getAll(chatId,chatName):
         return "None object found"
     else:
         return record
+
+def removeAll(chatId,chatName):
+    collection=initdb()
+    result=collection.delete_many({'chatId': chatId, 'chatName': chatName})
+    return "Deleted "+str(result.deleted_count)+" countdowns"
+
+
+def removeOne(chatId,chatName,counter):
+    collection=initdb()
+    result=collection.delete_one({'chatId': chatId, 'chatName': chatName, 'counter': counter})
+    return "Deleted " + str(result.deleted_count) + " countdown"

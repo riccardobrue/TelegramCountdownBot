@@ -126,6 +126,25 @@ def show_countdowns(bot, update):
 
     update.message.reply_text('LIST:('+ message +')')
 
+
+#==============================================================================================
+def delete_single(bot, update, args):
+    userName = update.message.from_user.first_name
+    chat_id = update.message.chat_id
+    index = int(args[0])
+    if(index!=None and isinstance(index, int)):
+        result=db_manager.removeOne(chat_id,userName,index)
+
+        update.message.reply_text(result)
+        return
+    else:
+        update.message.reply_text("You must specify the countdown to remove")
+#==========================------------------------------------
+def delete_all(bot, update):
+    userName = update.message.from_user.first_name
+    chat_id = update.message.chat_id
+    result=db_manager.removeAll(chat_id, userName)
+    update.message.reply_text(result)
 #==============================================================================================
 
 def openshiftStart():
@@ -160,6 +179,13 @@ def openshiftStart():
                                   pass_args=True,
                                   pass_job_queue=True,
                                   pass_chat_data=True))
+
+    dispatcher.add_handler(CommandHandler("delete", delete_single,
+                                  pass_args=True))
+
+    dispatcher.add_handler(CommandHandler('remall', delete_all))
+
+
 
     dispatcher.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
 
