@@ -119,10 +119,10 @@ def show_countdowns(bot, update):
     chat_id = update.message.chat_id
     logger.info("Message from %s: %s", user.first_name, update.message.text)
 
-    savedCountdown=db_manager.getAll(chat_id,user.first_name)
+    countdowns=db_manager.getAll(chat_id,user.first_name)
     message=""
-    for doc in savedCountdown:
-        message+=str(doc["date"])+"_"+doc["message"]+"\n"
+    for countdown in countdowns:
+        message+=str(countdown["date"])+"_"+countdown["message"]+"\n"
 
     update.message.reply_text('LIST:('+ message +')')
 
