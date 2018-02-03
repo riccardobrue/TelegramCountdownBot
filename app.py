@@ -146,12 +146,9 @@ def delete_single(bot, update, args):
     userName = update.message.from_user.first_name
     chat_id = update.message.chat_id
 
-    update.message.reply_text(str(args[0]))
-
-    if(args[0]!=None and isinstance(args[0],int)):
+    if(args[0]!=None and isinstance(int(args[0]),int)):
         index = int(args[0])
         result=db_manager.removeOne(chat_id,userName,index-1)#because starts from 1
-
         update.message.reply_text(result+str(index))
         return
     else:
