@@ -134,20 +134,21 @@ def show_countdowns(bot, update):
     countdowns=db_manager.getAll(chat_id,user.first_name)
     message=""
     for countdown in countdowns:
-        message+=str(countdown["date"])+"_"+countdown["message"]+"\n"
+        message+=str(countdown["counter"]+1)+")"+str(countdown["date"])+": "+countdown["message"]+"\n"
 
-    update.message.reply_text('LIST:('+ message +')')
+    update.message.reply_text(message)
 
 
 #==============================================================================================
 def delete_single(bot, update, args):
     userName = update.message.from_user.first_name
     chat_id = update.message.chat_id
-    index = int(args[0])
-    if(index!=None and isinstance(index, int)):
-        result=db_manager.removeOne(chat_id,userName,index)
 
-        update.message.reply_text(result)
+    if(args[0]!=None and isinstance(args[0],int)):
+        index = int(args[0])
+        result=db_manager.removeOne(chat_id,userName,index-1)#because starts from 1
+
+        update.message.reply_text(result+str(index))
         return
     else:
         update.message.reply_text("You must specify the countdown to remove")
