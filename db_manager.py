@@ -23,12 +23,12 @@ def add(chatId, chatName, message, date, counter):
         if(today<targetDate):
             # Add a document in the collection
             if(message==None):
-                countdown = {"chartId": chatId,
+                countdown = {"chatId": chatId,
                              "chatName": chatName,
                              "date": targetDate,
                              "counter": counter}
             else:
-                countdown = {"chartId": chatId,
+                countdown = {"chatId": chatId,
                              "chatName": chatName,
                              "message":message,
                              "date": targetDate,
@@ -47,7 +47,7 @@ def add(chatId, chatName, message, date, counter):
 
 def edit(chatId, chatName, newmessage, newdate, counter):
     collection = initdb()
-    record = collection.find_one({'chartid': chatId, 'chatName': chatName, 'counter': counter})
+    record = collection.find_one({'chatId': chatId, 'chatName': chatName, 'counter': counter})
     if (record == None):
         return "Cannot find the countdown!"
     else:
@@ -55,7 +55,7 @@ def edit(chatId, chatName, newmessage, newdate, counter):
         today = datetime.datetime.utcnow()
 
         if(today<targetDate):
-            countdown = {"chartid": chatId,
+            countdown = {"chatId": chatId,
                          "chatName": chatName,
                          "message": newmessage,
                          "date": targetDate,
@@ -70,7 +70,7 @@ def edit(chatId, chatName, newmessage, newdate, counter):
 
 def getSingle(chatId,chatName,counter):
     collection=initdb()
-    record=collection.find_one({'chartid': chatId, 'chatName': chatName, 'counter': counter})
+    record=collection.find_one({'chatId': chatId, 'chatName': chatName, 'counter': counter})
     if(record==None):
         return "None object found"
     else:
@@ -78,7 +78,7 @@ def getSingle(chatId,chatName,counter):
 
 def getAll(chatId,chatName):
     collection=initdb()
-    record=collection.find({'chartid': chatId, 'chatName': chatName})
+    record=collection.find({'chatId': chatId, 'chatName': chatName})
     if(record==None):
         return "None object found"
     else:
