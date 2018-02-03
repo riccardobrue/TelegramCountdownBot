@@ -98,9 +98,7 @@ def skip_timer_message(bot, update, user_data):
 
 #==========================------------------------------------
 def set_countdown(update, message, data):
-    insertionMessage = db_manager.add(update.message.chat_id, update.message.from_user.first_name, message, data, 0)
-    savedCountdown = db_manager.getSingle(update.message.chat_id, update.message.from_user.first_name, 0)
-
+    db_manager.add(update.message.chat_id, update.message.from_user.first_name, message, data, 0)
     update.message.reply_text("Countdown set. Bye!")
 
 
@@ -183,7 +181,7 @@ def openshiftStart():
     dispatcher.add_handler(CommandHandler("delete", delete_single,
                                   pass_args=True))
 
-    dispatcher.add_handler(CommandHandler('remall', delete_all))
+    dispatcher.add_handler(CommandHandler('remove_all', delete_all))
 
 
 

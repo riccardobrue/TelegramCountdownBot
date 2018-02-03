@@ -25,8 +25,8 @@ def add(chatId, chatName, message, date, counter):
             if(message==None):
                 countdown = {"chatId": chatId,
                              "chatName": chatName,
-                             "date": targetDate,
                              "message": "",
+                             "date": targetDate,
                              "counter": counter}
             else:
                 countdown = {"chatId": chatId,
