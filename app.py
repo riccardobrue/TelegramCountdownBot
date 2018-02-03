@@ -1,6 +1,7 @@
 from telegram.ext import Updater, CommandHandler
 import logging
 import db_manager
+import datetime
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -60,25 +61,36 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
+def openshiftStart():
+    updater = Updater('541177999:AAE3-K_4-pj7WMMLnjS4PPnG1NeHdMiqVa4')
+    dispatcher = updater.dispatcher
+    #queue = updater.job_queue
 
-updater = Updater('541177999:AAE3-K_4-pj7WMMLnjS4PPnG1NeHdMiqVa4')
-dispatcher = updater.dispatcher
-#queue = updater.job_queue
+    dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('hello', hello))
 
-dispatcher.add_handler(CommandHandler('start', start))
-dispatcher.add_handler(CommandHandler('hello', hello))
+    dispatcher.add_handler(CommandHandler("set", set_timer,
+                                  pass_args=True,
+                                  pass_job_queue=True,
+                                  pass_chat_data=True))
+    dispatcher.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
 
-dispatcher.add_handler(CommandHandler("set", set_timer,
-                              pass_args=True,
-                              pass_job_queue=True,
-                              pass_chat_data=True))
-dispatcher.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
+    # log all errors
+    dispatcher.add_error_handler(error)
 
-# log all errors
-dispatcher.add_error_handler(error)
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
+    updater.start_polling()
+    updater.idle()
 
 
-updater.start_polling()
-updater.idle()
+def localTesting():
+    message=db_manager.add(30,"test123","testing message","05/02/2018",0)
+    print(message)
+    message=db_manager.get(31,"test123",0)
+    print(message)
+
+
+
+#openshiftStart()
+localTesting()
