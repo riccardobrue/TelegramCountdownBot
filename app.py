@@ -16,9 +16,9 @@ DATE, MESSAGE  = range(2)
 def help(bot, update):
     helpText="Hello! this is the CountdownBot!\n" \
              "List of commands:\n" \
-             "- /start : Start the countdown inseriment process\n" \
-             "- /dismiss : Dismiss the current insertion process\n" \
-             "- /skip : Skip the inseriment of a 'message' for the countdown\n" \
+             "- /insert : Start the countdown inseriment process\n" \
+             "-- /dismiss : Dismiss the current insertion process\n" \
+             "-- /skip : Skip the inseriment of a 'message' for the countdown\n" \
              "- /show : Shows all the saved countdowns\n" \
              "- /remove_all : Removes all the saved countdowns\n" \
              "- /delete <index>: Removes the given countdown by the index\n"
@@ -171,7 +171,6 @@ def openshiftStart():
             ]
         },
         fallbacks=[
-            #CommandHandler('dismiss', dismiss,pass_user_data=True),
             RegexHandler('^([/]dismiss)$', dismiss,pass_user_data=True)
         ]
     )
@@ -180,20 +179,18 @@ def openshiftStart():
 
     dispatcher.add_handler(CommandHandler('help', help))
     dispatcher.add_handler(CommandHandler('show', show_countdowns))
+    dispatcher.add_handler(CommandHandler("delete", delete_single,pass_args=True))
+    dispatcher.add_handler(CommandHandler('remove_all', delete_all))
+
+
 
     dispatcher.add_handler(CommandHandler("set", set_timer,
                                   pass_args=True,
                                   pass_job_queue=True,
                                   pass_chat_data=True))
 
-    dispatcher.add_handler(CommandHandler("delete", delete_single,
-                                  pass_args=True))
-
-    dispatcher.add_handler(CommandHandler('remove_all', delete_all))
-
-
-
     dispatcher.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
+
 
     # log all errors
     dispatcher.add_error_handler(error)
