@@ -149,7 +149,7 @@ def delete_single(bot, update, args):
     if(args[0]!=None and isinstance(int(args[0]),int)):
         index = int(args[0])
         result=db_manager.removeOne(chat_id,userName,index-1)#because starts from 1
-        update.message.reply_text(result+str(index))
+        update.message.reply_text(result)
         return
     else:
         update.message.reply_text("You must specify the countdown to remove")
@@ -158,7 +158,7 @@ def delete_all(bot, update):
     userName = update.message.from_user.first_name
     chat_id = update.message.chat_id
     result=""
-    results=db_manager.removeAll(chat_id, userName)
+    result=db_manager.removeAll(chat_id, userName)
     if(result==""):
         result="No countdowns to remove!"
     update.message.reply_text(result)
