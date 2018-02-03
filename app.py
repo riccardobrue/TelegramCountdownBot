@@ -13,8 +13,16 @@ logger = logging.getLogger(__name__)
 DATE, MESSAGE  = range(2)
 
 
-def hello(bot, update):
-    update.message.reply_text('Hello {}'.format(update.message.from_user.first_name))
+def help(bot, update):
+    helpText="Hello! this is the CountdownBot!\n" \
+             "List of commands:\n" \
+             "- /start : Start the countdown inseriment process\n" \
+             "- /dismiss : Dismiss the current insertion process\n" \
+             "- /skip : Skip the inseriment of a 'message' for the countdown\n" \
+             "- /show : Shows all the saved countdowns\n" \
+             "- /remove_all : Removes all the saved countdowns\n" \
+             "- /delete <index>: Removes the given countdown by the index\n"
+    update.message.reply_text(helpText)
 
 
 def alarm(bot, job):
@@ -63,7 +71,7 @@ def clear(user_data):
         del user_data['data']
     user_data.clear()
 #==========================------------------------------------
-def timer_start(bot, update):
+def timer_insert(bot, update):
     user = update.message.from_user
     logger.info("Start received from %s: %s", user.first_name, update.message.text)
     update.message.reply_text('Hello! Set up your countdown, please send me a date (dd/mm/yyyy)')
@@ -152,7 +160,7 @@ def openshiftStart():
     # ==============================================================================================
     # Add conversation handler with the states DATE and MESSAGE
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', timer_start)],
+        entry_points=[CommandHandler('insert', timer_insert)],
         states={
             DATE: [
                 RegexHandler('^([0]?[1-9]|[1|2][0-9]|[3][0|1])[/]([0]?[1-9]|[1][0-2])[/]([0-9]{4}|[0-9]{2})$', set_timer_date,pass_user_data=True)
@@ -170,7 +178,7 @@ def openshiftStart():
     dispatcher.add_handler(conv_handler)
     # ==============================================================================================
 
-    dispatcher.add_handler(CommandHandler('hello', hello))
+    dispatcher.add_handler(CommandHandler('help', help))
     dispatcher.add_handler(CommandHandler('show', show_countdowns))
 
     dispatcher.add_handler(CommandHandler("set", set_timer,
