@@ -1,5 +1,6 @@
 import logging
 import db_manager
+import datetime
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
                           ConversationHandler)
 
@@ -80,9 +81,19 @@ def timer_start(bot, update):
 def set_timer_date(bot, update,user_data):
     user = update.message.from_user
     logger.info("Countdown date from %s: %s", user.first_name, update.message.text)
-    update.message.reply_text('Perfect! If you want you can set a message for this countdown!')
-    user_data['data'] = update.message.text
-    return MESSAGE
+
+    targetDate = datetime.datetime.strptime(update.message.text, '%d/%m/%Y')
+    today = datetime.datetime.utcnow()
+
+    if (today < targetDate):
+        update.message.reply_text('Perfect! If you want you can set a message for this countdown!')
+        user_data['data'] = update.message.text
+        return MESSAGE
+    else:
+        clear(user_data)
+        update.message.reply_text('Date not valid!')
+        return ConversationHandler.END
+
 #==========================------------------------------------
 def set_timer_message(bot, update,user_data):
     user = update.message.from_user
@@ -149,7 +160,7 @@ def openshiftStart():
             ]
         },
         fallbacks=[
-            CommandHandler('dismiss', dismiss,pass_user_data=True),
+            #CommandHandler('dismiss', dismiss,pass_user_data=True),
             RegexHandler('^([/]dismiss)$', dismiss,pass_user_data=True)
         ]
     )
