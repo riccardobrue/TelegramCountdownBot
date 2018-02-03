@@ -224,10 +224,10 @@ def openshiftStart():
 def localTesting():
     message=db_manager.add(30,"test123","testing message","05/02/2018",0)
     print(message)
-    message=db_manager.edit(30,"test123","test345","06/03/2019",0)
-    print(message)
-    message=db_manager.getSingle(30,"test123",0)
-    print(message)
+    #message=db_manager.edit(30,"test123","test345","06/03/2019",0)
+    #print(message)
+    #message=db_manager.getSingle(30,"test123",0)
+    #print(message)
 
     record=db_manager.getAll(30,"test123")
     for doc in record:
@@ -235,5 +235,5 @@ def localTesting():
 
 
 
-openshiftStart()
-#localTesting()
+#openshiftStart()
+localTesting()

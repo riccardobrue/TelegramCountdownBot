@@ -2,8 +2,8 @@ from pymongo import MongoClient
 import datetime
 
 def initdb():
-    client = MongoClient('mongodb://mongodb:mongodbpassword@mongodb/db')    #from OpenShift
-    #client = MongoClient('mongodb://localhost:27017/db')                   #local
+    #client = MongoClient('mongodb://mongodb:mongodbpassword@mongodb/db')    #from OpenShift
+    client = MongoClient('mongodb://localhost:27017/db')                   #local
 
     db = client.db
     try:
@@ -15,8 +15,7 @@ def initdb():
 
 def add(chatId, chatName, message, date, counter):
     collection=initdb()
-    record = collection.find_one({'chartid': chatId, 'chatName': chatName, 'counter': counter})
-
+    record = collection.find_one({'chatId': chatId, 'chatName': chatName, 'counter': counter})
     if (record == None):
         targetDate = datetime.datetime.strptime(date, '%d/%m/%Y')
         today = datetime.datetime.utcnow()
@@ -38,10 +37,9 @@ def add(chatId, chatName, message, date, counter):
 
             insertedId=collection.insert_one(countdown).inserted_id
             #SET THE NEXT COUNTDOWN
-            return "Date saved for the countdown! [code: "+counter+"]"
+            return "Date saved for the countdown! [code: "+str(counter)+"]"
         else:
             return "Cannot countdown to the past!"
-
     else:
         return add(chatId, chatName, message, date, counter+1)
 
