@@ -64,7 +64,6 @@ def error(bot, update, error):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, error)
 
-
 #==============================================================================================
 def clear(user_data):
     if 'data' in user_data:
@@ -74,7 +73,11 @@ def clear(user_data):
 def timer_insert(bot, update):
     user = update.message.from_user
     logger.info("Start received from %s: %s", user.first_name, update.message.text)
-    update.message.reply_text('Hello! Set up your countdown, please send me a date (dd/mm/yyyy)')
+    response="Hello!\n" \
+             "Instantiate a countdown\n" \
+             "Please send me a date (dd/mm/yyyy)\n" \
+             "[You can /dismiss this process]"
+    update.message.reply_text(response)
     return DATE
 #==========================------------------------------------
 def set_timer_date(bot, update,user_data):
@@ -85,7 +88,10 @@ def set_timer_date(bot, update,user_data):
     today = datetime.datetime.utcnow()
 
     if (today < targetDate):
-        update.message.reply_text('Perfect! If you want you can set a message for this countdown!')
+        response = "Date stored!\n" \
+                   "Send a message for this countdown\n" \
+                   "or type /skip to terminate"
+        update.message.reply_text(response)
         user_data['data'] = update.message.text
         return MESSAGE
     else:
