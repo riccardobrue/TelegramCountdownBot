@@ -123,7 +123,13 @@ def show_countdowns(bot, update):
     logger.info("Message from %s: %s", user.first_name, update.message.text)
 
     savedCountdown=db_manager.getAll(chat_id,user.first_name)
-    update.message.reply_text('Message acquired and countdown set. Bye! (' + savedCountdown +"_)")
+
+    records = db_manager.getAll(chat_id,user.first_name)
+    message=""
+    for doc in records:
+        message+=doc+" : _ : "
+
+    update.message.reply_text('Message acquired and countdown set. Bye! (' +savedCountdown+"_:_"+ message +"_)")
 
 #==============================================================================================
 
