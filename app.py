@@ -87,7 +87,7 @@ def set_timer_date(bot, update,user_data):
 
 #==========================------------------------------------
 def set_timer_message(bot, update,user_data):
-    set_countdown(update, update.message, user_data['data'])
+    set_countdown(update, update.message.text, user_data['data'])
     clear(user_data)
     return ConversationHandler.END
 #==========================------------------------------------
