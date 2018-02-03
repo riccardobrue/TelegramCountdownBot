@@ -96,7 +96,7 @@ def set_timer_message(bot, update,user_data):
     clear(user_data)
     return ConversationHandler.END
 #==========================------------------------------------
-def skip_timer_message(bot, update,user_data):
+def skip_timer_message(bot, update, user_data):
     user = update.message.from_user
     chat_id = update.message.chat_id
     logger.info("User %s did not send any message.", user.first_name)
@@ -108,7 +108,7 @@ def skip_timer_message(bot, update,user_data):
     clear(user_data)
     return ConversationHandler.END
 #==========================------------------------------------
-def dismiss(bot, update,user_data):
+def dismiss(bot, update, user_data):
     user = update.message.from_user
     logger.info("User %s dismissed the conversation.", user.first_name)
     update.message.reply_text('Dismissed. Bye!')
@@ -131,9 +131,9 @@ def openshiftStart():
             DATE: [RegexHandler('^([0]?[1-9]|[1|2][0-9]|[3][0|1])[/]([0]?[1-9]|[1][0-2])[/]([0-9]{4}|[0-9]{2})$', set_timer_date,pass_user_data=True)],
 
             MESSAGE: [MessageHandler(Filters.text, set_timer_message,pass_user_data=True),
-                    CommandHandler('skip_message', skip_timer_message)],
+                    CommandHandler('skip', skip_timer_message)],
         },
-        fallbacks=[CommandHandler('dismiss', dismiss)]
+        fallbacks=[CommandHandler('dismiss', dismiss,pass_user_data=True)]
     )
     dispatcher.add_handler(conv_handler)
     # ==============================================================================================
