@@ -135,6 +135,8 @@ def show_countdowns(bot, update):
     message=""
     for countdown in countdowns:
         message+=str(countdown["counter"]+1)+")"+str(countdown["date"])+": "+countdown["message"]+"\n"
+    if(message==""):
+        message="No countdowns to display!"
 
     update.message.reply_text(message)
 
@@ -158,7 +160,8 @@ def delete_single(bot, update, args):
 def delete_all(bot, update):
     userName = update.message.from_user.first_name
     chat_id = update.message.chat_id
-    result=db_manager.removeAll(chat_id, userName)
+    result=""
+    results=db_manager.removeAll(chat_id, userName)
     if(result==""):
         result="No countdowns to remove!"
     update.message.reply_text(result)
