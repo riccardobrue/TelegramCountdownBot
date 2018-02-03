@@ -235,5 +235,5 @@ def localTesting():
 
 
 
-#openshiftStart()
-localTesting()
+openshiftStart()
+#localTesting()

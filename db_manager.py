@@ -2,8 +2,8 @@ from pymongo import MongoClient
 import datetime
 
 def initdb():
-    #client = MongoClient('mongodb://mongodb:mongodbpassword@mongodb/db')    #from OpenShift
-    client = MongoClient('mongodb://localhost:27017/db')                   #local
+    client = MongoClient('mongodb://mongodb:mongodbpassword@mongodb/db')    #from OpenShift
+    #client = MongoClient('mongodb://localhost:27017/db')                   #local
 
     db = client.db
     try:
