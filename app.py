@@ -16,7 +16,7 @@ def hello(bot, update):
     update.message.reply_text('Hello {}'.format(update.message.from_user.first_name))
 
 
-def start(bot, update):
+def startnorm(bot, update):
     db_manager.add()
     savedMessage=db_manager.get()
 
@@ -117,7 +117,15 @@ def dismiss(bot, update, user_data):
     return ConversationHandler.END
 
 #==============================================================================================
+def show_countdowns(bot, update):
+    user = update.message.from_user
+    chat_id = update.message.chat_id
+    logger.info("Message from %s: %s", user.first_name, update.message.text)
 
+    savedCountdown=db_manager.getAll(chat_id,user.first_name)
+    update.message.reply_text('Message acquired and countdown set. Bye! (' + savedCountdown +"_)")
+
+#==============================================================================================
 
 def openshiftStart():
     updater = Updater('541177999:AAE3-K_4-pj7WMMLnjS4PPnG1NeHdMiqVa4')
@@ -128,18 +136,25 @@ def openshiftStart():
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', timer_start)],
         states={
-            DATE: [RegexHandler('^([0]?[1-9]|[1|2][0-9]|[3][0|1])[/]([0]?[1-9]|[1][0-2])[/]([0-9]{4}|[0-9]{2})$', set_timer_date,pass_user_data=True)],
-
-            MESSAGE: [MessageHandler(Filters.text, set_timer_message,pass_user_data=True),
-                    CommandHandler('skip', skip_timer_message)],
+            DATE: [
+                RegexHandler('^([0]?[1-9]|[1|2][0-9]|[3][0|1])[/]([0]?[1-9]|[1][0-2])[/]([0-9]{4}|[0-9]{2})$', set_timer_date,pass_user_data=True)
+            ],
+            MESSAGE: [
+                MessageHandler(Filters.text, set_timer_message,pass_user_data=True),
+                RegexHandler('^([/]skip)$', skip_timer_message,pass_user_data=True)
+            ]
         },
-        fallbacks=[CommandHandler('dismiss', dismiss,pass_user_data=True)]
+        fallbacks=[
+            CommandHandler('dismiss', dismiss,pass_user_data=True),
+            RegexHandler('^([/]dismiss)$', dismiss,pass_user_data=True)
+        ]
     )
     dispatcher.add_handler(conv_handler)
     # ==============================================================================================
 
-    dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('startnorm', startnorm))
     dispatcher.add_handler(CommandHandler('hello', hello))
+    dispatcher.add_handler(CommandHandler('show', show_countdowns))
 
     dispatcher.add_handler(CommandHandler("set", set_timer,
                                   pass_args=True,
