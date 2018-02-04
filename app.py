@@ -38,7 +38,7 @@ def start(bot, update, args, job_queue, chat_data):
     if (args[0] != None and isinstance(int(args[0]), int)):
         index = int(args[0])
         countdown = db_manager.getSingle(chat_id, userName, index - 1)  # because starts from 1
-        date=countdown["date"]
+        date=str(countdown["date"])
         message=countdown["message"]
         today = datetime.datetime.utcnow()
 
