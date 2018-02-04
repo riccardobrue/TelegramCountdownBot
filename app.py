@@ -206,12 +206,12 @@ def openshiftStart():
 
 
 
-    dispatcher.add_handler(CommandHandler("start", set_timer,
+    dispatcher.add_handler(CommandHandler("start", start,
                                     pass_args=True,
                                     pass_job_queue=True,
                                     pass_chat_data=True))
 
-    dispatcher.add_handler(CommandHandler("stop", unset,
+    dispatcher.add_handler(CommandHandler("stop", stop,
                                     pass_args=True,
                                     pass_chat_data=True))
 
