@@ -17,7 +17,7 @@ def add(chatId, chatName, message, date, counter):
     collection=initdb()
     record = collection.find_one({'chatId': chatId, 'chatName': chatName, 'counter': counter})
     if (record == None):
-        targetDate = datetime.datetime.strptime(date, '%d/%m/%Y')
+        targetDate = datetime.datetime.strptime(date, '%d-%m-%Y')
         today = datetime.datetime.utcnow()
 
         if(today<targetDate):
@@ -51,7 +51,7 @@ def edit(chatId, chatName, newmessage, newdate, counter):
     if (record == None):
         return "Cannot find the countdown!"
     else:
-        targetDate = datetime.datetime.strptime(newdate, '%d/%m/%Y')
+        targetDate = datetime.datetime.strptime(newdate, '%d-%m-%Y')
         today = datetime.datetime.utcnow()
 
         if(today<targetDate):
@@ -74,7 +74,7 @@ def getSingle(chatId,chatName,counter):
     if(record==None):
         return "None object found"
     else:
-        return str(record)
+        return record
 
 def getAll(chatId,chatName):
     collection=initdb()

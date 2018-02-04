@@ -22,8 +22,9 @@ def help(bot, update):
              "- /show : Shows all the saved countdowns\n" \
              "- /remove_all : Removes all the saved countdowns\n" \
              "- /delete <index>: Removes the given countdown by the index\n" \
-             "- /start <index> : Starts the selected countdown\n" \
-             "- /stop <index> : Stops the selected countdown"
+             "- /start <index> : Starts the selected countdown notifications\n" \
+             "- /stop <index> : Stops the selected countdown notifications\n" \
+             "- /get <index> : Shows how many days left in a countdown"
     update.message.reply_text(helpText)
 #==============================================================================================
 #==============================================================================================
@@ -42,9 +43,12 @@ def start(bot, update, args, job_queue, chat_data):
         message=countdown["message"]
         today = datetime.datetime.utcnow()
 
+        notificationtime="02:00"
+
+
         update.message.reply_text("DATE: "+str(date)+"\n"+"MESSAGE: "+message+"\n" +"TODAY: "+str(today))
 
-        """
+
         try:
             # args[0] should contain the time for the timer in seconds
             due = int(args[0])
@@ -60,26 +64,43 @@ def start(bot, update, args, job_queue, chat_data):
 
         except (IndexError, ValueError):
             update.message.reply_text('Usage: /set <seconds>')
-        """
 
     else:
         update.message.reply_text("You must specify which countdown to start!")
 
+# ==========================------------------------------------
+    def stop(bot, update, chat_data):
+        """Remove the job if the user changed their mind."""
+        if 'job' not in chat_data:
+            update.message.reply_text('You have no active timer')
+            return
+        job = chat_data['job']
+        job.schedule_removal()
+        del chat_data['job']
+        update.message.reply_text('Timer successfully unset!')
+#==============================================================================================
+def instantGet(bot, update, args ):
+    chat_id = update.message.chat_id
+    userName = update.message.from_user.first_name
+
+    if (args[0] != None and isinstance(int(args[0]), int)):
+        index = int(args[0])
+        countdown = db_manager.getSingle(chat_id, userName, index - 1)  # because starts from 1
+
+        targetDate = datetime.datetime.strptime(countdown["date"], '%d/%m/%Y').date()
+        message = countdown["message"]
+        today = datetime.datetime.utcnow().date()
+
+        difference = targetDate - today
+
+        update.message.reply_text( str(difference.days)+ " days left!")
+
+    else:
+        update.message.reply_text("You must specify which countdown to show!")
 
 
-
-#==========================------------------------------------
-def stop(bot, update, chat_data):
-    """Remove the job if the user changed their mind."""
-    if 'job' not in chat_data:
-        update.message.reply_text('You have no active timer')
-        return
-    job = chat_data['job']
-    job.schedule_removal()
-    del chat_data['job']
-    update.message.reply_text('Timer successfully unset!')
-# ==============================================================================================
-# ==============================================================================================
+#==============================================================================================
+#==============================================================================================
 #==============================================================================================
 #==============================================================================================
 def clear(user_data):
@@ -92,7 +113,7 @@ def timer_insert(bot, update):
     logger.info("Start received from %s: %s", user.first_name, update.message.text)
     response="Hello!\n" \
              "Instantiate a countdown\n" \
-             "Please send me a date (dd/mm/yyyy)\n" \
+             "Please send me a date (dd-mm-yyyy)\n" \
              "[You can /dismiss this process]"
     update.message.reply_text(response)
     return DATE
@@ -100,8 +121,9 @@ def timer_insert(bot, update):
 def set_timer_date(bot, update,user_data):
     user = update.message.from_user
     logger.info("Countdown date from %s: %s", user.first_name, update.message.text)
-    targetDate = datetime.datetime.strptime(update.message.text, '%d/%m/%Y')
-    today = datetime.datetime.utcnow()
+    targetDate = datetime.datetime.strptime(update.message.text, '%d/%m/%Y').date()
+    today = datetime.datetime.utcnow().date()
+
     if (today < targetDate):
         response = "Date stored!\n" \
                    "Send a message for this countdown\n" \
@@ -185,7 +207,7 @@ def openshiftStart():
         entry_points=[CommandHandler('insert', timer_insert)],
         states={
             DATE: [
-                RegexHandler('^([0]?[1-9]|[1|2][0-9]|[3][0|1])[/]([0]?[1-9]|[1][0-2])[/]([0-9]{4}|[0-9]{2})$', set_timer_date,pass_user_data=True)
+                RegexHandler('^([0]?[1-9]|[1|2][0-9]|[3][0|1])[-]([0]?[1-9]|[1][0-2])[-]([0-9]{4}|[0-9]{2})$', set_timer_date,pass_user_data=True)
             ],
             MESSAGE: [
                 MessageHandler(Filters.text, set_timer_message,pass_user_data=True),
@@ -215,6 +237,8 @@ def openshiftStart():
                                     pass_args=True,
                                     pass_chat_data=True))
 
+    dispatcher.add_handler(CommandHandler("get", instantGet,
+                                    pass_args=True))
 
     # log all errors
     dispatcher.add_error_handler(error)
@@ -232,17 +256,25 @@ def openshiftStart():
 
 
 def localTesting():
-    message=db_manager.add(30,"test123","testing message","05/02/2018",0)
+    message=db_manager.add(30,"test123","testing message","06/02/2018",0)
     print(message)
     #message=db_manager.edit(30,"test123","test345","06/03/2019",0)
     #print(message)
-    #message=db_manager.getSingle(30,"test123",0)
+    countdown=db_manager.getSingle(30,"test123",0)
     #print(message)
+    #record=db_manager.getAll(30,"test123")
+    #for doc in record:
+    #   print(doc)
 
-    record=db_manager.getAll(30,"test123")
-    for doc in record:
-        print(doc)
+    targetDate = datetime.datetime.strptime(countdown["date"], '%d/%m/%Y').date()
+    message = countdown["message"]
+    today = datetime.datetime.utcnow().date()
 
+    difference=targetDate-today
+
+    print("DATE: " + str(targetDate) + "\nMESSAGE: " + message + "\nTODAY: " + str(today)+"\nDIFFERENCE: ")
+
+    print(str(difference.days))
 
 
 openshiftStart()
