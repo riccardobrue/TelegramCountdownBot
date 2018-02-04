@@ -69,15 +69,15 @@ def start(bot, update, args, job_queue, chat_data):
         update.message.reply_text("You must specify which countdown to start!")
 
 # ==========================------------------------------------
-    def stop(bot, update, chat_data):
-        """Remove the job if the user changed their mind."""
-        if 'job' not in chat_data:
-            update.message.reply_text('You have no active timer')
-            return
-        job = chat_data['job']
-        job.schedule_removal()
-        del chat_data['job']
-        update.message.reply_text('Timer successfully unset!')
+def stop(bot, update, chat_data):
+    """Remove the job if the user changed their mind."""
+    if 'job' not in chat_data:
+        update.message.reply_text('You have no active timer')
+        return
+    job = chat_data['job']
+    job.schedule_removal()
+    del chat_data['job']
+    update.message.reply_text('Timer successfully unset!')
 #==============================================================================================
 def instantGet(bot, update, args ):
     chat_id = update.message.chat_id
