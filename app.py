@@ -211,10 +211,12 @@ def openshiftStart():
             ],
             MESSAGE: [
                 MessageHandler(Filters.text, set_timer_message,pass_user_data=True),
+                CommandHandler('skip', skip_timer_message,pass_user_data=True),
                 RegexHandler('^([/]skip)$', skip_timer_message,pass_user_data=True)
             ]
         },
         fallbacks=[
+            CommandHandler('dismiss', dismiss,pass_user_data=True),
             RegexHandler('^([/]dismiss)$', dismiss,pass_user_data=True)
         ]
     )
