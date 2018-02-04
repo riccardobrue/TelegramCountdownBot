@@ -279,5 +279,7 @@ def localTesting():
     print(str(difference.days))
 
 
-openshiftStart()
+#openshiftStart()
 #localTesting()
+import test
+test.mainTest()
