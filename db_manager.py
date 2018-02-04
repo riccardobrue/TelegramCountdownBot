@@ -26,13 +26,13 @@ def add(chatId, chatName, message, date, counter):
                 countdown = {"chatId": chatId,
                              "chatName": chatName,
                              "message": "",
-                             "date": targetDate,
+                             "date": date,
                              "counter": counter}
             else:
                 countdown = {"chatId": chatId,
                              "chatName": chatName,
                              "message":message,
-                             "date": targetDate,
+                             "date": date,
                              "counter": counter}
 
             insertedId=collection.insert_one(countdown).inserted_id
@@ -58,7 +58,7 @@ def edit(chatId, chatName, newmessage, newdate, counter):
             countdown = {"chatId": chatId,
                          "chatName": chatName,
                          "message": newmessage,
-                         "date": targetDate,
+                         "date": newdate,
                          "counter": counter}
 
             collection.update_one({'_id': record["_id"] }, {"$set": countdown})
