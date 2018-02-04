@@ -87,7 +87,7 @@ def instantGet(bot, update, args ):
         index = int(args[0])
         countdown = db_manager.getSingle(chat_id, userName, index - 1)  # because starts from 1
 
-        targetDate = datetime.datetime.strptime(countdown["date"], '%d/%m/%Y').date()
+        targetDate = datetime.datetime.strptime(countdown["date"], '%d-%m-%Y').date()
         message = countdown["message"]
         today = datetime.datetime.utcnow().date()
 
@@ -121,7 +121,7 @@ def timer_insert(bot, update):
 def set_timer_date(bot, update,user_data):
     user = update.message.from_user
     logger.info("Countdown date from %s: %s", user.first_name, update.message.text)
-    targetDate = datetime.datetime.strptime(update.message.text, '%d/%m/%Y').date()
+    targetDate = datetime.datetime.strptime(update.message.text, '%d-%m-%Y').date()
     today = datetime.datetime.utcnow().date()
 
     if (today < targetDate):
