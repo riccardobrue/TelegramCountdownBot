@@ -208,7 +208,7 @@ def openshiftStart():
         states={
             DATE: [
                 #RegexHandler('^([0]?[1-9]|[1|2][0-9]|[3][0|1])[-]([0]?[1-9]|[1][0-2])[-]([0-9]{4}|[0-9]{2})$', set_timer_date,pass_user_data=True)
-                MessageHandler(Filters.text, set_timer_date, pass_user_data=True)
+                MessageHandler(Filters.all, set_timer_date, pass_user_data=True)
             ],
             MESSAGE: [
                 MessageHandler(Filters.text, set_timer_message,pass_user_data=True),
