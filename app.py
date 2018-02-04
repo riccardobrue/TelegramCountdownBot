@@ -207,16 +207,14 @@ def openshiftStart():
         entry_points=[CommandHandler('insert', timer_insert)],
         states={
             DATE: [
-                RegexHandler('^.*$', set_timer_date,pass_user_data=True)
+                RegexHandler('^([0]?[1-9]|[1|2][0-9]|[3][0|1])[-]([0]?[1-9]|[1][0-2])[-]([0-9]{4}|[0-9]{2})$', set_timer_date,pass_user_data=True)
             ],
             MESSAGE: [
                 MessageHandler(Filters.text, set_timer_message,pass_user_data=True),
-                CommandHandler('skip', skip_timer_message,pass_user_data=True),
                 RegexHandler('^([/]skip)$', skip_timer_message,pass_user_data=True)
             ]
         },
         fallbacks=[
-            CommandHandler('dismiss', dismiss,pass_user_data=True),
             RegexHandler('^([/]dismiss)$', dismiss,pass_user_data=True)
         ]
     )
@@ -279,7 +277,29 @@ def localTesting():
     print(str(difference.days))
 
 
-#openshiftStart()
+openshiftStart()
 #localTesting()
-import test
-test.mainTest()
+
+#localTesting()
+#import test
+#test.mainTest()
+
+
+"""
+You: /setprivacy
+
+BotFather: Choose a bot to change group messages settings.
+
+You: @your_name_bot
+
+BotFather: 'Enable' - your bot will only receive messages that either start with the '/' symbol or mention the bot by username.
+
+'Disable' - your bot will receive all messages that people send to groups.
+
+Current status is: ENABLED
+
+You: Disable
+
+BotFather: Success! The new status is: DISABLED. /help
+
+"""
