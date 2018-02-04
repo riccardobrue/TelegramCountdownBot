@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 DATE, MESSAGE  = range(2)
 
-
+#==============================================================================================
 def help(bot, update):
     helpText="Hello! this is the CountdownBot!\n" \
              "List of commands:\n" \
@@ -21,35 +21,55 @@ def help(bot, update):
              "-- /skip : Skip the inseriment of a 'message' for the countdown\n" \
              "- /show : Shows all the saved countdowns\n" \
              "- /remove_all : Removes all the saved countdowns\n" \
-             "- /delete <index>: Removes the given countdown by the index\n"
+             "- /delete <index>: Removes the given countdown by the index\n" \
+             "- /start <index> : Starts the selected countdown\n" \
+             "- /stop <index> : Stops the selected countdown"
     update.message.reply_text(helpText)
-
-
+#==============================================================================================
+#==============================================================================================
 def alarm(bot, job):
     """Send the alarm message."""
     bot.send_message(job.context, text='Beep!')
-
-def set_timer(bot, update, args, job_queue, chat_data):
-    """Add a job to the queue."""
+#==========================------------------------------------
+def start(bot, update, args, job_queue, chat_data):
     chat_id = update.message.chat_id
-    try:
-        # args[0] should contain the time for the timer in seconds
-        due = int(args[0])
-        if due < 0:
-            update.message.reply_text('Sorry we can not go back to future!')
-            return
+    userName = update.message.from_user.first_name
 
-        # Add job to queue
-        job = job_queue.run_once(alarm, due, context=chat_id)
-        chat_data['job'] = job
+    if (args[0] != None and isinstance(int(args[0]), int)):
+        index = int(args[0])
+        countdown = db_manager.getSingle(chat_id, userName, index - 1)  # because starts from 1
+        date=countdown["date"]
+        message=countdown["message"]
+        today = datetime.datetime.utcnow()
 
-        update.message.reply_text('Timer successfully set!')
+        update.message.reply_text("DATE: "+str(date)+"\n"+"MESSAGE: "+message+"\n" +"TODAY: "+str(today))
 
-    except (IndexError, ValueError):
-        update.message.reply_text('Usage: /set <seconds>')
+        """
+        try:
+            # args[0] should contain the time for the timer in seconds
+            due = int(args[0])
+            if due < 0:
+                update.message.reply_text('Sorry we can not go back to future!')
+                return
+
+            # Add job to queue
+            job = job_queue.run_once(alarm, due, context=chat_id)
+            chat_data['job'] = job
+
+            update.message.reply_text('Timer successfully set!')
+
+        except (IndexError, ValueError):
+            update.message.reply_text('Usage: /set <seconds>')
+        """
+
+    else:
+        update.message.reply_text("You must specify which countdown to start!")
 
 
-def unset(bot, update, chat_data):
+
+
+#==========================------------------------------------
+def stop(bot, update, chat_data):
     """Remove the job if the user changed their mind."""
     if 'job' not in chat_data:
         update.message.reply_text('You have no active timer')
@@ -58,12 +78,9 @@ def unset(bot, update, chat_data):
     job.schedule_removal()
     del chat_data['job']
     update.message.reply_text('Timer successfully unset!')
-
-
-def error(bot, update, error):
-    """Log Errors caused by Updates."""
-    logger.warning('Update "%s" caused error "%s"', update, error)
-
+# ==============================================================================================
+# ==============================================================================================
+#==============================================================================================
 #==============================================================================================
 def clear(user_data):
     if 'data' in user_data:
@@ -83,10 +100,8 @@ def timer_insert(bot, update):
 def set_timer_date(bot, update,user_data):
     user = update.message.from_user
     logger.info("Countdown date from %s: %s", user.first_name, update.message.text)
-
     targetDate = datetime.datetime.strptime(update.message.text, '%d/%m/%Y')
     today = datetime.datetime.utcnow()
-
     if (today < targetDate):
         response = "Date stored!\n" \
                    "Send a message for this countdown\n" \
@@ -98,33 +113,29 @@ def set_timer_date(bot, update,user_data):
         clear(user_data)
         update.message.reply_text('Date not valid!')
         return ConversationHandler.END
-
 #==========================------------------------------------
 def set_timer_message(bot, update,user_data):
-    set_countdown(update, update.message.text, user_data['data'])
+    set_countdown(bot, update, update.message.text, user_data['data'])
     clear(user_data)
     return ConversationHandler.END
 #==========================------------------------------------
 def skip_timer_message(bot, update, user_data):
-    set_countdown(update, None, user_data['data'])
+    set_countdown(bot,update, None, user_data['data'])
     clear(user_data)
     return ConversationHandler.END
-
 #==========================------------------------------------
-def set_countdown(update, message, data):
+def set_countdown(bot, update, message, data):
     db_manager.add(update.message.chat_id, update.message.from_user.first_name, message, data, 0)
-    update.message.reply_text("Countdown set. Bye!")
-
-
+    update.message.reply_text("Countdown set\n"
+                              "Do not forget to /start <index> the countdown!\n"
+                              "Bye!")
 #==========================------------------------------------
 def dismiss(bot, update, user_data):
     user = update.message.from_user
     logger.info("User %s dismissed the conversation.", user.first_name)
     update.message.reply_text('Dismissed. Bye!')
-
     clear(user_data)
     return ConversationHandler.END
-
 #==============================================================================================
 def show_countdowns(bot, update):
     user = update.message.from_user
@@ -137,10 +148,7 @@ def show_countdowns(bot, update):
         message+=str(countdown["counter"]+1)+")"+str(countdown["date"])+": "+countdown["message"]+"\n"
     if(message==""):
         message="No countdowns to display!"
-
     update.message.reply_text(message)
-
-
 #==============================================================================================
 def delete_single(bot, update, args):
     userName = update.message.from_user.first_name
@@ -163,7 +171,10 @@ def delete_all(bot, update):
         result="No countdowns to remove!"
     update.message.reply_text(result)
 #==============================================================================================
-
+def error(bot, update, error):
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, error)
+#==============================================================================================
 def openshiftStart():
     updater = Updater('541177999:AAE3-K_4-pj7WMMLnjS4PPnG1NeHdMiqVa4')
     dispatcher = updater.dispatcher
@@ -195,12 +206,14 @@ def openshiftStart():
 
 
 
-    dispatcher.add_handler(CommandHandler("set", set_timer,
-                                  pass_args=True,
-                                  pass_job_queue=True,
-                                  pass_chat_data=True))
+    dispatcher.add_handler(CommandHandler("start", set_timer,
+                                    pass_args=True,
+                                    pass_job_queue=True,
+                                    pass_chat_data=True))
 
-    dispatcher.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
+    dispatcher.add_handler(CommandHandler("stop", unset,
+                                    pass_args=True,
+                                    pass_chat_data=True))
 
 
     # log all errors
